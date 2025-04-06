@@ -1,66 +1,58 @@
+# Finance Wisdom Garden Architecture
 
-# Finance Wisdom Garden
+## Overview
 
-A modern personal finance management application built with React and TypeScript.
+The Finance Wisdom Garden application uses a modern serverless architecture, leveraging cloud services to minimize operational overhead while maximizing scalability and reliability.
 
-## Features
+## Architecture Components
 
-- Financial Dashboard with key metrics (income, expenses, savings)
-- Transaction Management
-- User Authentication
-- Expense Planner
-- Subscription Tracker
-- Responsive Design
+### Frontend
 
-## Technologies
+- **React.js**: Single-page application built with React and TypeScript
+- **Tailwind CSS**: For responsive UI design
+- **React Router**: For client-side routing
 
-- React.js with TypeScript
-- React Router for navigation
-- Tailwind CSS for styling
-- Shadcn UI component library
-- Tanstack React Query
-- Lucide React for icons
+### Backend Services
 
-## Getting Started
+- **Firebase Authentication**: Handles user authentication
+- **Firebase Firestore**: NoSQL database for storing user data
+- **Firebase Storage**: For storing user files and images
 
-1. Clone the repository
-2. Install dependencies with `npm install`
-3. Start the development server with `npm run dev`
-4. Open http://localhost:8080 in your browser
+### DevOps
 
-## Docker Support
+- **GitHub Actions**: CI/CD pipeline for automated testing and deployment
+- **Docker**: Containerization for consistent environments
+- **Terraform**: Infrastructure as Code to provision AWS resources
 
-### Building and running with Docker
+### AWS Infrastructure
 
-```bash
-# Build the Docker image
-docker build -t finance-wisdom-garden .
+- **ECR (Elastic Container Registry)**: Stores Docker images
+- **ECS (Elastic Container Service)**: Runs containerized applications
+- **Fargate**: Serverless compute engine for containers
+- **Application Load Balancer**: Routes traffic to the application
+- **CloudWatch**: Monitoring and logging
 
-# Run the container
-docker run -p 8080:80 finance-wisdom-garden
-```
+## Data Flow
 
-### Using Docker Compose
+1. Users interact with the React frontend
+2. Authentication requests are sent to Firebase Auth
+3. Data operations are performed against Firebase Firestore
+4. The application is deployed via GitHub Actions to AWS ECS
+5. Monitoring and logging data is collected in CloudWatch
 
-```bash
-# Start the application
-docker-compose up -d
+## Deployment Process
 
-# Stop the application
-docker-compose down
-```
+1. Code is pushed to the GitHub repository
+2. GitHub Actions workflow is triggered
+3. Application is built and tested
+4. Docker image is created and pushed to DockerHub
+5. Terraform provisions or updates AWS infrastructure
+6. New version of the application is deployed to ECS
 
-To use Firebase with Docker, make sure to set up your environment variables:
+## Security Considerations
 
-```bash
-# Example using a .env file
-docker-compose --env-file .env up -d
-```
-
-## Project Structure
-
-- `/src/components`: UI components
-- `/src/pages`: Application pages
-- `/src/contexts`: React context providers
-- `/src/lib`: Utility functions
-- `/src/hooks`: Custom React hooks
+- Firebase authentication for user identity
+- HTTPS for all communication
+- Environment variables for sensitive configuration
+- IAM roles for AWS resource access
+- Security groups to restrict network access
