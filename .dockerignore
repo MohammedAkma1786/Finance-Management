@@ -3,6 +3,8 @@ node_modules
 npm-debug.log
 Dockerfile
 .dockerignore
+.github
+.git
 .gitignore
 README.md
 docker-compose.yml
