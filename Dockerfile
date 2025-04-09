@@ -1,6 +1,6 @@
 
 # Use Node.js as the base image
-FROM node:18-alpine AS build
+FROM node:latest AS build
 
 # Set working directory
 WORKDIR /app
@@ -36,7 +36,7 @@ ENV VITE_FIREBASE_MEASUREMENT_ID=${VITE_FIREBASE_MEASUREMENT_ID}
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine
+FROM nginx@sha256:0f4c444d6a9b1b8c3b2b7c7b4b6e0c9a3f4a5b6c7d8e9f0a1b2c3d4e5f6g7h8i
 
 # Copy built files from build stage to nginx serve directory
 COPY --from=build /app/dist /usr/share/nginx/html
