@@ -1,9 +1,8 @@
-
-# Use Node.js as the base image
-FROM node:latest AS build
+# Use Node.js as the base image for building the app
+FROM node:18-alpine AS build
 
 # Set working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -14,10 +13,11 @@ RUN npm install
 # Copy all files
 COPY . .
 
-#Declare environment variables
+# Declare environment variables
 ARG VITE_FIREBASE_API_KEY
 ARG VITE_FIREBASE_AUTH_DOMAIN
 ARG VITE_FIREBASE_PROJECT_ID
+
 ARG VITE_FIREBASE_STORAGE_BUCKET
 ARG VITE_FIREBASE_MESSAGING_SENDER_ID
 ARG VITE_FIREBASE_APP_ID
@@ -32,21 +32,20 @@ ENV VITE_FIREBASE_MESSAGING_SENDER_ID=${VITE_FIREBASE_MESSAGING_SENDER_ID}
 ENV VITE_FIREBASE_APP_ID=${VITE_FIREBASE_APP_ID}
 ENV VITE_FIREBASE_MEASUREMENT_ID=${VITE_FIREBASE_MEASUREMENT_ID}
 
-# Build the app
+# Build the React app
 RUN npm run build
 
-# Production stage
-FROM nginx@sha256:0f4c444d6a9b1b8c3b2b7c7b4b6e0c9a3f4a5b6c7d8e9f0a1b2c3d4e5f6g7h8i
+# Debug: List the contents of the build directory
+RUN ls -la /usr/src/app/build
 
-# Copy built files from build stage to nginx serve directory
-COPY --from=build /app/dist /usr/share/nginx/html
+# Use Nginx as the base image for serving the app
+FROM nginx:1.27-alpine-slim@sha256:b05aceb5ec1844435cae920267ff9949887df5b88f70e11d8b2871651a596612
 
-# Create custom nginx config to handle React Router properly
-RUN rm -rf /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy the React build output to the Nginx HTML directory
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
 
-# Start nginx
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

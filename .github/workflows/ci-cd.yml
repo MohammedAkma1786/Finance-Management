@@ -6,7 +6,6 @@ on:
 
 jobs:
   docker-build-and-push:
-    # Removed 'needs' to make this job independent
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
 
@@ -27,9 +26,8 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./Dockerfile # <-- Ensure this points to your Dockerfile
+          file: ./Dockerfile
           push: true
-          no-cache: true # <-- Helps resolve any stale cache confusion
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/finance-wisdom-garden:latest
           build-args: |
             VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}
