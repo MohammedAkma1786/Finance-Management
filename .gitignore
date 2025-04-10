@@ -14,6 +14,12 @@ dist-ssr
 # Build output
 .env.*
 
+# Dependency directories
+.terraform/
+*.tfstate
+*.tfstate.backup
+crash.log
+.terraform.lock.hcl
 
 # Editor directories and files
 .vscode/*
