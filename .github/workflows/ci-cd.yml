@@ -1,3 +1,5 @@
+name: CI/CD Pipeline for React App
+
 on:
   push:
     branches:
@@ -27,7 +29,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push Docker image to Amazon ECR
+      - name: Build and Push Docker image to ECR
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -43,9 +45,10 @@ jobs:
             VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}
             VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
 
-      - name: Deploy to ECS
+      - name: Deploy updated image to ECS
         run: |
           aws ecs update-service \
             --cluster finance-wisdom-garden-cluster \
             --service finance-wisdom-garden-service \
-            --force-new-deployment
+            --force-new-deployment \
+            --region eu-west-2
