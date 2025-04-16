@@ -120,6 +120,41 @@ resource "aws_cloudwatch_log_group" "ecs_log_group" {
   retention_in_days = 7 # Adjust retention period as needed
 }
 
+# Load Balancer
+resource "aws_lb" "app_lb" {
+  name               = "${var.service_name}-lb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.app_sg.id]
+  subnets            = var.subnets
+}
+
+resource "aws_lb_target_group" "app_tg" {
+  name        = "${var.service_name}-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc
+  target_type = "ip"
+  health_check {
+    path                = "/"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+}
+
+resource "aws_lb_listener" "app_listener" {
+  load_balancer_arn = aws_lb.app_lb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app_tg.arn
+  }
+}
+
 # ECS Service
 resource "aws_ecs_service" "app" {
   name            = var.service_name
@@ -133,8 +168,16 @@ resource "aws_ecs_service" "app" {
     security_groups = [aws_security_group.app_sg.id]
     assign_public_ip = true
   }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.app_tg.arn
+    container_name   = "app"
+    container_port   = 80
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.ecs_task_policy,
-    aws_ecr_repository.app_repo
+    aws_ecr_repository.app_repo,
+    aws_lb_listener.app_listener
   ]
 }
