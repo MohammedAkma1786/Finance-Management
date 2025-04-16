@@ -119,4 +119,8 @@ resource "aws_ecs_service" "app" {
     security_groups = [aws_security_group.app_sg.id]
     assign_public_ip = true
   }
+  depends_on = [
+    aws_iam_role_policy_attachment.ecs_task_policy,
+    aws_ecr_repository.app_repo
+  ]
 }
