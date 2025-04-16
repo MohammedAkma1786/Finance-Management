@@ -82,6 +82,14 @@ resource "aws_ecs_task_definition" "app" {
         value = var.firebase_measurement_id
       }
     ]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/${var.service_name}"
+        awslogs-region        = var.aws_region
+        awslogs-stream-prefix = "ecs"
+      }
+    }
   }])
 }
 
@@ -104,6 +112,12 @@ resource "aws_security_group" "app_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+# CloudWatch Log Group
+resource "aws_cloudwatch_log_group" "ecs_log_group" {
+  name              = "/ecs/${var.service_name}"
+  retention_in_days = 7 # Adjust retention period as needed
 }
 
 # ECS Service
