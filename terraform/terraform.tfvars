@@ -4,7 +4,7 @@ cluster_name = "finance-wisdom-garden-cluster"
 task_family = "finance-wisdom-garden-task"
 vpc_id = "vpc-0af87c9797c0a1559"
 vpc = "vpc-0af87c9797c0a1559"
-subnets = ["subnet-01db74c892d5c9c31"]
+subnets = ["subnet-01db74c892d5c9c31", "subnet-0c89ee78526fc0057"] 
 service_name = "finance-wisdom-garden-service"
 
 aws_access_key = "AKIA6ODU6F35DTEYBVGV"
