@@ -35,7 +35,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: 992382693114.dkr.ecr.eu-west-2.amazonaws.com/finance-ecr 
+          tags: 992382693114.dkr.ecr.eu-west-2.amazonaws.com/finance-ecr:latest
           build-args: |
             VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}
             VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
