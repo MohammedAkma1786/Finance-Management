@@ -21,7 +21,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: eu-west-2
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -33,7 +33,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/finance-wisdom-garden:latest
+          tags: 992382693114.dkr.ecr.eu-west-2.amazonaws.com/finance-wisdom-garden:latest
           build-args: |
             VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}
             VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
@@ -46,6 +46,6 @@ jobs:
       - name: Deploy to ECS
         run: |
           aws ecs update-service \
-            --cluster my-cluster \
-            --service my-service \
+            --cluster finance-wisdom-garden-cluster \
+            --service finance-wisdom-garden-service \
             --force-new-deployment
