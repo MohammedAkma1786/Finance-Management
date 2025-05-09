@@ -20,6 +20,7 @@ dist-ssr
 *.tfstate.backup
 crash.log
 .terraform.lock.hcl
+.terraform.tfvars 
 
 # Editor directories and files
 .vscode/*
